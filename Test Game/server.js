@@ -22,19 +22,25 @@ let p = null;
 io.on('connection', function (socket) {
    console.log(`Socket Connected: ${socket.id}`);
 
-   p = socket;
+   if (p === null) p = socket;
+   
+   socket.on("left", function(data) { if (p) p.emit("change", {dir: 0}); console.log("DETECTED LEFT");});
+   socket.on("right", function(data) { if (p) p.emit("change", {dir: 1}); console.log("DETECTED RIGHT");});
+   socket.on("up", function(data) { if (p) p.emit("change", {dir: 2}); console.log("DETECTED UP");});
+   socket.on("down", function(data) { if (p) p.emit("change", {dir: 3}); console.log("DETECTED DOWN");});
 
    socket.on('disconnect', function () {
        console.log(`Socket Disconnected: ${socket.id}`);
        p = null;
    });
+   
 });
 
-setInterval(function () {
+/*setInterval(function () {
     if (p) {
         p.emit("change", {dir: Math.floor(Math.random() * 4)})
     }
-}, 1000);
+}, 1000);*/
 
 
 
