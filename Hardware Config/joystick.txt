@@ -1,0 +1,7 @@
+Joystick Color Marking Scheme:
+
+Left 4 Red
+Right 22 White
+Up 27 Gray
+Down 17 Purple
+Ground Black
