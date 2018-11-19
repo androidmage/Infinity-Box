@@ -1,8 +1,9 @@
 const Gpio = require("onoff").Gpio;
 const io = require("socket.io-client");
 
-var socket = io.connect("http://localhost:3000/", {reconnection:true});
+var socket = io.connect("http://infinity-server.herokuapp.com/", {reconnection:true});
 
+socket.emit("isController", {});
 
 var left = new Gpio(4, 'in', 'falling', {debounceTimeout: 10});
 var right = new Gpio(22, 'in', 'falling', {debounceTimeout: 10});
@@ -52,6 +53,7 @@ process.on('SIGINT', function() {
   right.unexport();
   up.unexport();
   down.unexport();
+  socket.disconnect();
   console.log("Closing");
   process.exit();
 });
