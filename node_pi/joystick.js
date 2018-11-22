@@ -8,21 +8,23 @@ var socket = io.connect("http://tank-io.herokuapp.com/", { reconnection: true })
 
 socket.emit("registerController", { message: "Infinity Controller ONLINE." });
 
-var left = new Gpio(4, 'in', 'falling', { debounceTimeout: 10 });
-var right = new Gpio(22, 'in', 'falling', { debounceTimeout: 10 });
-var up = new Gpio(27, 'in', 'falling', { debounceTimeout: 10 });
-var down = new Gpio(17, 'in', 'falling', { debounceTimeout: 10 });
+var left = new Gpio(4, 'in', 'both', { debounceTimeout: 10 });
+var right = new Gpio(22, 'in', 'both', { debounceTimeout: 10 });
+var up = new Gpio(27, 'in', 'both', { debounceTimeout: 10 });
+var down = new Gpio(17, 'in', 'both', { debounceTimeout: 10 });
 var shoot = new Gpio(21, 'in', 'falling', {debounceTimeout: 10 });
 
 console.log("Started:");
+
+var is_up = false, is_down = false, is_left = false, is_right = false;
 
 left.watch(function (err, value) {
    if (err) {
      console.log("There was an error", err);
      return;
    }
-   console.log("LEFT BUTTON PRESSED");
-   socket.emit("left", {});
+   console.log(`LEFT BUTTON: ${value}`);
+   socket.emit("left", {num: value});
  });
 
 right.watch(function (err, value) {
@@ -30,8 +32,8 @@ right.watch(function (err, value) {
      console.log("There was an error", err);
      return;
    }
-   console.log("RIGHT BUTTON PRESSED");
-   socket.emit("right", {});
+   console.log(`RIGHT BUTTON: ${value}`);
+   socket.emit("right", {num: value});
  });
 
 up.watch(function (err, value) {
@@ -39,8 +41,8 @@ up.watch(function (err, value) {
      console.log("There was an error", err);
      return;
    }
-   console.log("UP BUTTON PRESSED");
-   socket.emit("up");
+   console.log(`UP BUTTON: ${value}`);
+   socket.emit("up", {num: value});
  });
 
 down.watch(function (err, value) {
@@ -48,8 +50,8 @@ down.watch(function (err, value) {
      console.log("There was an error", err);
      return;
    }
-   console.log("DOWN BUTTON PRESSED");
-   socket.emit("down");
+   console.log(`DOWN BUTTON: ${value}`);
+   socket.emit("down", {num: value});
  });
 
 shoot.watch(function (err, value) {
@@ -57,8 +59,8 @@ shoot.watch(function (err, value) {
      console.log("There was an error", err);
      return;
    }
-   console.log("SHOOT BUTTON PRESSED");
-   socket.emit("shoot");
+   console.log("SHOOT BUTTON PRESSED", value);
+   socket.emit("shoot_now", {});
  });
 
 process.on('SIGINT', function () {

@@ -1,6 +1,6 @@
 const Gpio = require("onoff").Gpio;
 
-var button = new Gpio(21, 'in', 'falling', {debounceTimeout: 10});
+var button = new Gpio(21, 'in', 'both', {debounceTimeout: 10});
 
 button.watch(function (err, value) {
   if (err) {
